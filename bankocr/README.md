@@ -1,0 +1,4 @@
+# BankOCR
+
+Work in progress. 
+
