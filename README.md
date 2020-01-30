@@ -1,1 +1,1 @@
-# haskell-katas
+# Haskell Learning Resources
