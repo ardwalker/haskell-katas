@@ -10,8 +10,13 @@ module Typeclasses
 ) where
 
 
+
+-- =============================================================================
+-- DayOfWeek datatype
 data DayOfWeek = Mon | Tue | Weds | Thu | Fri | Sat | Sun 
   deriving (Show)
+
+-- DayOfWeek data type support for the Eq typeclass
 instance Eq DayOfWeek where 
   (==) Mon Mon = True 
   (==) Tue Tue = True 
@@ -22,8 +27,12 @@ instance Eq DayOfWeek where
   (==) Sun Sun = True 
   (==) _ _ = False
 
+
+-- Date datatype
 data Date = Date DayOfWeek Int
   deriving (Show)
+
+-- DayOfWeek support for the Eq typeclass
 instance Eq Date where 
   (==) (Date weekday dayOfMonth) 
        (Date weekday' dayOfMonth') = 
@@ -32,17 +41,21 @@ instance Eq Date where
 -- Date Thu 10 == Date Thu 10
 
 
+-- =============================================================================
+
+-- BasicEq typeclass
+class BasicEq a where
+    isEqual :: a -> a -> Bool
+
+-- Bool support for the BasicEq typeclass
+instance BasicEq Bool where
+    isEqual True  True  = True
+    isEqual False False = True
+    isEqual _     _     = False
+-- =============================================================================
 
 
--- class BasicEq a where
---     isEqual :: a -> a -> Bool
--- 
--- instance BasicEq Bool where
---     isEqual True  True  = True
---     isEqual False False = True
---     isEqual _     _     = False
-
-
+-- =============================================================================
 -- Two ways to include a user defined type in a type class
 -- ‣ Method (1): use deriving; only works for some predefined, frequently used
 -- type classes like Eq, Ord, Show, Read
@@ -53,14 +66,15 @@ data MyShinyNewType
 
 
 -- ‣ Method (2): the programmer explicitly provides the definition for the member functions of the class 
--- data MyShinyNewType
---   = This Int
---   | That String
--- instance Eq MyShinyNewType where
---   (==) (This n) (This m) = True
---   (==) _        _        = False
---   (/=) t1 t2 = not (t1 == t2)
-  
+data MyShinyNewType
+  = This Int
+  | That String
+instance Eq MyShinyNewType where
+  (==) (This n) (This m) = True
+  (==) _        _        = False
+  (/=) t1 t2 = not (t1 == t2)
+-- =============================================================================
+
 
 data Point = Point Float Float deriving (Show)
 
@@ -133,41 +147,89 @@ But if we want lights to appear like "Red light" , then we have to make
 the instance declaration by hand. 
 -}
 
--- -----------
+
+-- =============================================================================
+
+{-
+  The YesNo typeclass defines one function. 
+
+  That function takes one value of a type that can be considered 
+  to hold some concept of true-ness and tells us for sure if it's true or not. 
+
+  Notice that from the way we use the a in the function, a has to be a 
+  concrete type. Next up, let's define some instances.
+
+  For numbers, we'll assume that (like in JavaScript) any number 
+  that isn't 0 is true-ish and 0 is false-ish. 
+-}
 
 class YesNo a where
   yesno :: a > Bool
 
-{-
-  Pretty simple. The YesNo typeclass defines one function. 
-  That function takes one value of a type that can be considered 
-  to hold some concept of true-ness and tells us for sure if it's true or not. 
-  Notice that from the way we use the a in the function, a has to be a 
-  concrete type. Next up, let's define some instances. 
-  For numbers, we'll assume that (like in JavaScript) any number 
-  that isn't 0 is true-ish and 0 is false-ish. 
--}
-    
 instance YesNo Int where
   yesno 0 = False
   yesno _ = True
-  
-  
+
 instance YesNo [a] where
   yesno [] = False
   yesno _ = True
-  
+
 instance YesNo Bool where
   yesno = id 
 
 instance YesNo (Maybe a) where
   yesno (Just _) = True
   yesno Nothing = False
-    
+
 instance YesNo TrafficLight where
   yesno Red = False
   yesno _ = True
-    
+
+
+
+-- =============================================================================
+-- Typeclasses
+-- =============================================================================
+
+-- A typeclass is a sort of interface that defines some behavior. 
+--If a type is a part of a typeclass, that means that it supports and 
+-- implements the behavior the typeclass describes. A lot of people coming from 
+-- OOP get confused by typeclasses because they think they are like classes in 
+-- object oriented languages. Well, they're not. You can think of them kind of 
+-- as Java interfaces, only better.
+-- NOTE: the => operator, this is a class constraint. Everything before the => 
+-- symbol is called a class constraint. We can read the previous type
+-- declaration like this: the equality function takes any two values that are
+--  of the same type and returns a Bool. The type of those two values must 
+-- be a member of the Eq class (this was the class constraint).
+-- ghci> :t (==)
+-- (==) :: (Eq a) => a -> a -> Bool
+
+Eq          -- equality 
+Show        -- like toString 
+Read        -- opposite of show, reads a string and returns a type
+
+Ord         (deriving Eq) -- ordering
+Num         (deriving Eq, Show)
+Bounded 
+
+Enum
+Real        (deriving Ord, Num) 
+Fractional  (deriving Num)
+
+Integral    (deriving Enum, Real) 
+RealFrac    (deriving Real, Fractional) 
+Floating    (deriving Fractional) 
+
+Monad 
+RealFloat   (deriving RealFrac, Floating)  
+
+MonadPlus   (deriving Monad)    
+Functor
+
+-- =============================================================================
+
+
     
   
   

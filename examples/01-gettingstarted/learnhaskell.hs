@@ -1,9 +1,9 @@
+-- Tutorial from:  https://www.schoolofhaskell.com/school/starting-with-haskell/introduction-to-haskell/2-algebraic-data-types
 
 
--- Great tutorial
--- https://www.schoolofhaskell.com/school/starting-with-haskell/introduction-to-haskell/2-algebraic-data-types
-
-
+--------------------------------------------------------------------------------
+-- comments
+--------------------------------------------------------------------------------
 
 -- Single line comments start with two dashes.
 
@@ -12,9 +12,9 @@ in a block like this.
 -}
 
 
-
--- =============================================================================
-
+--------------------------------------------------------------------------------
+-- functions
+--------------------------------------------------------------------------------
 
 -- Defining Basic Functions
 -- We can write functions on integers by cases.
@@ -25,55 +25,6 @@ sumtorial n = n + sumtorial (n - 1)
 
 main = print (sumtorial 10)
 
-
-
--- =============================================================================
-
-
--- =============================================================================
-
-
--- =============================================================================
--- Typeclasses
--- =============================================================================
-
--- A typeclass is a sort of interface that defines some behavior. 
---If a type is a part of a typeclass, that means that it supports and 
--- implements the behavior the typeclass describes. A lot of people coming from 
--- OOP get confused by typeclasses because they think they are like classes in 
--- object oriented languages. Well, they're not. You can think of them kind of 
--- as Java interfaces, only better.
--- NOTE: the => operator, this is a class constraint. Everything before the => 
--- symbol is called a class constraint. We can read the previous type
--- declaration like this: the equality function takes any two values that are
---  of the same type and returns a Bool. The type of those two values must 
--- be a member of the Eq class (this was the class constraint).
--- ghci> :t (==)
--- (==) :: (Eq a) => a -> a -> Bool
-
-Eq          -- equality 
-Show        -- like toString 
-Read        -- opposite of show, reads a string and returns a type
-
-Ord         (deriving Eq) -- ordering
-Num         (deriving Eq, Show)
-Bounded 
-
-Enum
-Real        (deriving Ord, Num) 
-Fractional  (deriving Num)
-
-Integral    (deriving Enum, Real) 
-RealFrac    (deriving Real, Fractional) 
-Floating    (deriving Fractional) 
-
-Monad 
-RealFloat   (deriving RealFrac, Floating)  
-
-MonadPlus   (deriving Monad)    
-Functor
-
--- =============================================================================
 
 
 
@@ -105,6 +56,10 @@ Functor
 -- 5
 
 
+--------------------------------------------------------------------------------
+-- bounded types
+--------------------------------------------------------------------------------
+
 -- Bounded members have an upper and a lower bound.
 ghci> minBound :: Int
  -2147483648
@@ -125,11 +80,9 @@ ghci> :t 20
 -- floating point types to work together nicely.
 
 
-
-
--- =============================================================================
--- 1. Primitive Datatypes and Operators
--- =============================================================================
+--------------------------------------------------------------------------------
+-- Primitive Datatypes and Operators
+--------------------------------------------------------------------------------
 
 -- You have numbers
 3 -- 3
@@ -176,11 +129,11 @@ not False -- True
 "This is a string" !! 0 -- 'T'
 
 
--- =============================================================================
--- 2. Declarations
--- =============================================================================
+--------------------------------------------------------------------------------
+-- declarations
+--------------------------------------------------------------------------------
 
--- The above code declares a variable x with type Int (:: is pronounced “has 
+-- The below code declares a variable x with type Int (:: is pronounced “has 
 -- type”) and declares the value of x to be 3. Note that this will be the value 
 -- of x forever (at least, in this particular program). The value of x cannot 
 -- be changed later.
@@ -195,8 +148,6 @@ main = print x
 
 
 -- What do you think this code means?
-y :: Int
-y = y + 1
 -- Because = denotes definition rather than assignment, this does not increment
 -- the value of y. Instead, this statement is taken as a recursive definition;
 -- evaluation of y yields
@@ -205,6 +156,8 @@ y = y + 1
 -- = ((y + 1) + 1) + 1
 -- = ...
 -- resulting in an endless loop.
+y :: Int
+y = y + 1
 
 
 
@@ -230,13 +183,11 @@ main = print (i `div` i, div 12 5)
 
 
 
+--------------------------------------------------------------------------------
+-- lists and tuples
+--------------------------------------------------------------------------------
 
--- =============================================================================
--- 3. Lists and Tuples
--- =============================================================================
-
--- Every element in a list must have the same type.
--- These two lists are equal:
+-- Every element in a list must have the same type. These two lists are equal:
 [1, 2, 3, 4, 5]
 [1..5]
 
@@ -294,8 +245,9 @@ snd ("haskell", 1) -- 1
 -- pair element accessing does not work on n-tuples (i.e. triple, quadruple, etc)
 snd ("snd", "can't touch this", "da na na na") -- error! see function below
 
+
 --------------------------------------------------------------------------------
--- 3. Functions
+-- functions
 --------------------------------------------------------------------------------
 -- A simple function that takes two variables
 add a b = a + b
@@ -347,8 +299,9 @@ myMap (\x -> x + 2) [1..5] -- [3, 4, 5, 6, 7]
 -- list as the initial value for the accumulator.
 foldl1 (\acc x -> acc + x) [1..5] -- 15
 
+
 --------------------------------------------------------------------------------
--- 4. More functions
+-- partial application
 --------------------------------------------------------------------------------
 
 -- partial application: if you don't pass in all the arguments to a function,
@@ -390,7 +343,7 @@ even . fib $ 7 -- false
 
 
 --------------------------------------------------------------------------------
--- 5. Type signatures
+-- type signatures
 --------------------------------------------------------------------------------
 
 -- Haskell has a very strong type system, and every valid expression has a type.
@@ -402,18 +355,20 @@ True :: Bool
 
 -- Functions have types too.
 -- `not` takes a boolean and returns a boolean:
--- not :: Bool -> Bool
+not :: Bool -> Bool
 
 -- Here's a function that takes two arguments:
--- add :: Integer -> Integer -> Integer
+add :: Integer -> Integer -> Integer
 
 -- When you define a value, it's good practice to write its type above it:
 double :: Integer -> Integer
 double x = x * 2
 
--- =============================================================================
--- 6. Control Flow and If Expressions
--- =============================================================================
+
+
+--------------------------------------------------------------------------------
+-- control flow and if expressions
+--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 -- if-expressions
@@ -424,8 +379,6 @@ haskell = if 1 == 1 then "awesome" else "awful" -- haskell = "awesome"
 haskell = if 1 == 1
             then "awesome"
             else "awful"
-
-
 
 
 -- Haskell doesn't have loops; it uses recursion instead.
@@ -455,9 +408,10 @@ foldr (\x y -> 2*x + y) 4 [1,2,3] -- 16
 -- This is now the same as
 (2 * 1 + (2 * 2 + (2 * 3 + 4)))
 
--- =============================================================================
--- 7. Data or Enumeration Types
--- =============================================================================
+
+--------------------------------------------------------------------------------
+-- data types
+--------------------------------------------------------------------------------
 
 -- Here's how you make your own data type in Haskell
 data Color = Red | Blue | Green
@@ -513,9 +467,9 @@ main = print (safeDiv 2 0, safeDiv 3 4)
 
 
 
--- =============================================================================
--- 8. Haskell IO
--- =============================================================================
+--------------------------------------------------------------------------------
+-- IO
+--------------------------------------------------------------------------------
 
 -- While IO can't be explained fully without explaining monads,
 -- it is not hard to explain enough to get going.
@@ -594,63 +548,11 @@ main'' = do
 -- concurrently; so, concurrency in Haskell is very easy.
 
 
--- =============================================================================
--- 9. The Haskell REPL
--- =============================================================================
-
--- Start the repl by typing `ghci`.
--- Now you can type in Haskell code. Any new values
--- need to be created with `let`:
-
-let foo = 5
-
--- You can see the type of any value or expression with `:t`:
-
-> :t foo
-foo :: Integer
-
-
--- The a in the type is lower case, which means its a type variable 
--- this is like a generic. Functions that have type variables are called polymorphic functions.
---- ghci> :t head
--- head :: [a] -> a
-
-
--- Operators, such as `+`, `:` and `$`, are functions.
--- Their type can be inspected by putting the operator in parentheses:
-
-> :t (:)
-(:) :: a -> [a] -> [a]
-
--- You can get additional information on any `name` using `:i`:
-
-> :i (+)
-class Num a where
-  (+) :: a -> a -> a
-  ...
-    -- Defined in ‘GHC.Num’
-infixl 6 +
-
--- You can also run any action of type `IO ()`
-
-> sayHello
-What is your name?
-Friend!
-Hello, Friend!
-
 
 qsort [] = []
 qsort (p:xs) = qsort lesser ++ [p] ++ qsort greater
     where lesser  = filter (< p) xs
           greater = filter (>= p) xs
-
-
---------------------------------------------------------------------------------
-
-
-
---------------------------------------------------------------------------------
-
 
 
 --------------------------------------------------------------------------------

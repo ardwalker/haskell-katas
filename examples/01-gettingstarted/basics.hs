@@ -1,10 +1,4 @@
-ghci
 
-:?      -- help
-:module -- loads a module ; e.g. :module + Data.Ratio
-:info   -- prints information :info (+)
-:set +t -- prints the type
-:show bindings
 
 
 -- =============================================================================
@@ -19,23 +13,21 @@ ghci> 7.0 / 2.0
 
 ghci> 2 + (-3)
 
+-- Int is a bounded integer 
 -- Integers can be arbitrarily large. Here, (^) provides integer exponentiation:
 ghci> 313 ^ 15
 
 
 
--- ---------
-
 -- =============================================================================
 -- Functions 
 -- =============================================================================
-
-
 double x = x + x
+
 quadruple x = double (double x)
 
-
 factorial n = product [1..n]
+
 average ns = sum ns `div` length ns
 
 

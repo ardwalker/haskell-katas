@@ -14,12 +14,115 @@ module Patterns
   first
 ) where
 
+
+
+
+--------------------------------------------------------------------------------
+-- As-patterns
+--------------------------------------------------------------------------------
+
+-- For example, a function that duplicates the first element in a list might be written as: 
+f :: [a] -> [a]
+f (x:xs)  = x:x:xs
+
+-- To improve readability, we might prefer to write x:xs just once, which we can achieve using an as-pattern as follows: (Another advantage to doing this is that a naive implementation might completely reconstruct x:xs rather than re-use the value being matched against.) 
+f :: [a] -> [a]
+f s@(x:xs) = x:s
+
+-- The @ sign makes this an as-pattern, in this case, the entire list can be referenced by 'all'
+
+capital :: String -> String  
+capital "" = "Empty string, whoops!"  
+capital all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]  
+
+
+
+--------------------------------------------------------------------------------
+-- Wild-cards.
+--------------------------------------------------------------------------------
+-- Another common situation is matching against a value we really care nothing about. For example, the functions head and tail defined in Section 2.1 can be rewritten as: 
+
+head (x:_)             = x
+tail (_:xs)            = xs
+
+
+
+--------------------------------------------------------------------------------
+-- pattern matching with guards
+--------------------------------------------------------------------------------
+-- top-level patterns may also have a boolean guard, as in this definition of a function that forms an abstract version of a number's sign: 
+sign x |  x >  0        =   1
+       |  x == 0        =   0
+       |  x <  0        =  -1
+
+
+abs :: Int -> Int
+abs x
+    | x < 0 = - x
+    | x > 0 = x
+
+
+-- The pattern-matching rules can have subtle effects on the meaning of functions. For example, consider this definition of take: 
+
+take  0     _           =  []
+take  _     []          =  []
+take  n     (x:xs)      =  x : take (n-1) xs
+
+
+and :: Bool -> Bool -> Bool
+and True True = True
+and False _ = False
+
+
+
+data Tree a = Fork a (Tree a) (Tree a) | Nil
+
+func :: Tree a -> Int
+func Nil              = 1
+func (Fork _ Nil Nil) = 2
+func (Fork _ Nil _)   = 3
+func (Fork _ _   Nil) = 4
+
+
+lucky :: (Integral a) => a -> String  
+lucky 7 = "LUCKY NUMBER SEVEN!"  
+lucky x = "Sorry, you're out of luck, pal!"
+
+
+sayMe :: (Integral a) => a -> String  
+sayMe 1 = "One!"  
+sayMe 2 = "Two!"  
+sayMe 3 = "Three!"  
+sayMe 4 = "Four!"  
+sayMe 5 = "Five!"  
+sayMe x = "Not between 1 and 5" 
+
+
+first :: (a, b, c) -> a  
+first (x, _, _) = x  
+  
+second :: (a, b, c) -> b  
+second (_, y, _) = y  
+  
+third :: (a, b, c) -> c  
+third (_, _, z) = z  
+
+tell :: (Show a) => [a] -> String  
+tell [] = "The list is empty"  
+tell (x:[]) = "The list has one element: " ++ show x  
+tell (x:y:[]) = "The list has two elements: " ++ show x ++ " and " ++ show y  
+tell (x:y:_) = "This list is long. The first two elements are: " ++ show x ++ " and " ++ show y  
+
+
+
 --------------------------------------------------------------------------------
 -- Haskell will match starting at the top, until it hits a catchall
 --------------------------------------------------------------------------------
 factorial :: Int -> Int
 factorial 0 = 1
 factorial n = n *  factorial(n - 1)
+
+
 
 
 --------------------------------------------------------------------------------

@@ -41,6 +41,8 @@ g
 f >>= (\_ -> g)
 -}
 
+--import Text
+
 inc :: Int -> Maybe Int
 inc n = Just (n + 1)
 
@@ -54,6 +56,10 @@ main = do
 
     putStrLn "---- >> Maybe ----"
     print $ Nothing >> (Just 0)
+    print $ "Nothing >> (Just 0)    " ++ show(Nothing >> (Just 0)) 
+    --import Text to use printf "Nothing >> (Just 0)" show (Nothing >> (Just 0))
+
+      
     print $ (Just 0) >> (Nothing :: Maybe Int)
     print $ (Just 0) >> Nothing >> (Just 1)
     print $ (Just 0) >> (Just 1) >> (Just 2)
