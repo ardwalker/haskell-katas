@@ -1,4 +1,9 @@
+
 ghci
+
+-- Customize prompt
+:set prompt "λ: "
+:set prompt "\ESC[1;35m\x03BB: \ESC[m"
 
 :?        -- help
 :module   -- loads a module ; e.g. :module + Data.Ratio
